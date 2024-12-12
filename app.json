@@ -24,6 +24,22 @@
     },
     "plugins": [
       "expo-router",
+      // ----------------------------------------------------------------
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoib2JzY3VyZW1kIiwiYSI6ImNtMXl0Y3g4bzAwM2MyanF2bjFxd2ExMDAifQ.6hfkV4GSm3rrx6YSMUE9WA",
+          "RNMapboxMapsVersion": "11.0.0"
+        }
+      ],
+      // -----------------------------------------------------------------
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Pinoy to use your Location"
+        }
+      ],
+      // ------------------------------------------------------------------
       [
         "expo-splash-screen",
         {

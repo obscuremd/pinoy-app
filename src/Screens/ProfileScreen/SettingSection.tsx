@@ -1,11 +1,13 @@
 import { Card, Text } from "@/src/Exports/Exports"
-import { useAuth } from "@clerk/clerk-expo"
+import { useAuth as ProviderAuth } from "@/src/Providers/AuthProvider"
+import { useAuth as ClerkAuth } from "@clerk/clerk-expo"
 import { Bin, LongArrowDownLeft } from "iconoir-react-native"
 import { View } from "react-native"
 
 export default function SettingsSection (){
 
-  const {signOut} = useAuth()
+  const {signOut} = ClerkAuth()
+  const {userData} = ProviderAuth()
 
     return(
       <View className='gap-8'>
@@ -20,7 +22,7 @@ export default function SettingsSection (){
               between 
               bookmark_button 
               primary_text='E-Mail' 
-              secondary_text='John Doe @gmail.com'/>
+              secondary_text={userData?.email}/>
             <Card 
               border 
               outline='white' 
@@ -28,7 +30,7 @@ export default function SettingsSection (){
               between 
               bookmark_button 
               primary_text='Username' 
-              secondary_text='John Doe'/>
+              secondary_text={userData?.email}/>
             <Card 
               border 
               outline='white' 
@@ -36,7 +38,7 @@ export default function SettingsSection (){
               between 
               bookmark_button 
               primary_text='Phone Number' 
-              secondary_text='(+234) 090-xxx-xxxx'/>
+              secondary_text={`(+234) ${userData?.phone_number}`}/>
             <Card 
               border 
               outline='white' 

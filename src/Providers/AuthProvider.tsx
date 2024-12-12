@@ -3,6 +3,7 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 import { characters } from "../Exports/Constants";
 import { useClerk, useSignIn, useSignUp } from '@clerk/clerk-expo'
 import axios from 'axios';
+import { useRouter } from "expo-router";
 
 
   interface LoginProps {
@@ -19,8 +20,10 @@ import axios from 'axios';
   interface CreateProps {
     formData:{
         username: string,
+        full_name: string,
         email: string,
         phone_number: string,
+        residential_address: string,
     }
   }
 
@@ -44,33 +47,37 @@ export default function AuthProvider ({children}:PropsWithChildren){
 
         const url = 'https://pinoy-sever.vercel.app'
         const {user} = useClerk()
+        const route = useRouter()
 
         const [userData,setUserData] = useState<User | null>(null)
         const [loading, setLoading] = useState(false)
 
         useEffect(()=>{
-            const fetchUsers=async()=>{
-              setLoading(true)
-                try {
-                  const res = await axios.get(`${url}/user/email/${user?.emailAddresses[0].emailAddress}`)
-                  setUserData(res.data)
-                } catch (error) {
-                  console.log(error)
-                }finally{
-                  setLoading(false)
-                }
-            }
             fetchUsers()
         },[])
+
+        const fetchUsers=async()=>{
+          setLoading(true)
+            try {
+              const res = await axios.get(`${url}/user/email/${user?.emailAddresses[0].emailAddress}`)
+              setUserData(res.data)
+              setLoading(false)
+            } catch (error) {
+              console.log(error)
+              setLoading(false)
+            }
+        }
 
         const Create =async({formData}:CreateProps)=>{
           setLoading(true)
           try {
             const res = await axios.post(`${url}/user/register`,formData)
             console.log(res.data  )
+            setLoading(false)
+            route.replace('/')
+            fetchUsers()
           } catch (error) {
             console.log(error)
-          }finally{
             setLoading(false)
           }
         }
