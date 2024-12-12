@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "pinoy-app",
-    "slug": "pinoy-app",
+    "name": "pinoy",
+    "slug": "pinoy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

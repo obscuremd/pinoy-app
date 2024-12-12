@@ -1,45 +1,55 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { menuItems } from "@/src/Exports/Constants";
+import { Menu, Navbar } from "@/src/Exports/Exports";
+import { useAuth as ProviderAuth } from "@/src/Providers/AuthProvider";
+import { useGen } from "@/src/Providers/GeneralProvider";
+import AuthScreen from "@/src/Screens/AuthScreen2/AuthScreen";
+import { useAuth as ClerkAuth } from "@clerk/clerk-expo";
+import { Redirect, Slot } from "expo-router";
+import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function MainLayout() {
+    const { isSignedIn, isLoaded } = ClerkAuth();
+    const {navbar} = useGen()
+    const {userData} = ProviderAuth()
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+    console.log(userData)
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    if (!isLoaded) {
+        return <ActivityIndicator size="large" />;
+    }
+
+    if (!isSignedIn) {
+        return <Redirect href="/auth" />;
+    }
+
+    if(userData === null) {
+        return <AuthScreen/>
+    }
+
+    return (
+      <SafeAreaView style={{flex:1}} className="relative bg-background-500 items-center pt-5  text-grayscale-500 gap-">
+      <View className="relative bg-background-500 items-center pt-5 px-4 text-grayscale-500 gap-">
+          {/* navbar */}
+          <View className="p-3">
+              <Navbar/>
+          </View>
+
+          {/* Sidebar */}
+          {navbar && <View className="absolute z-50 top-[7%] w-full flex-col items-center p-10 bg-background-500 backdrop-blur-0 self-start">
+              <Menu menuItems={menuItems} logo mode='vertical'/>
+          </View>}
+      
+          {/* pages */}
+          <ScrollView style={{ flex: 1 }}>
+              <Slot />
+          </ScrollView>
+          
+          {/* menu */}
+          <View className="p-3">
+              <Menu between menuItems={menuItems} collapsed mode='horizontal'/>
+          </View>
+      </View>
+</SafeAreaView>
   );
 }
