@@ -3,6 +3,8 @@ import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
 import GeneralProvider from "@/src/Providers/GeneralProvider";
 import AuthProvider from "@/src/Providers/AuthProvider";
 import { tokenCache } from '@/cache'
+import RideProvider from "@/src/Providers/RideProvider";
+import DriverProvider from "@/src/Providers/DriverProvider";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
@@ -15,9 +17,13 @@ export default function RootLayout(){
         <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
           <ClerkLoaded>
             <GeneralProvider>
-              <AuthProvider>
-                <Slot/>
-              </AuthProvider>
+                <AuthProvider>
+                  <RideProvider>
+                    <DriverProvider>
+                      <Slot/>
+                    </DriverProvider>
+                  </RideProvider>
+                </AuthProvider>
             </GeneralProvider>
           </ClerkLoaded>
       </ClerkProvider>

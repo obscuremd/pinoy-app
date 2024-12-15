@@ -1,4 +1,5 @@
 interface User {
+  _id: string;
   username: string; // Required, must be unique
   full_name: string; // Required
   email: string; // Required, must be unique
@@ -14,7 +15,7 @@ interface User {
   status?: "registered" | "unregistered"; // Optional, defaults to 'unregistered'
   trips?: string[]; // Optional, defaults to an empty array
   location?: {
-    lng: number;
-    lat: number;
+    type: "Point";
+    coordinates: [number, number]; // Longitude, Latitude format
   } | null; // Optional, defaults to null
 }

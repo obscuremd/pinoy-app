@@ -13,8 +13,6 @@ export default function MainLayout() {
     const {navbar} = useGen()
     const {userData} = ProviderAuth()
 
-    console.log(userData)
-
     if (!isLoaded) {
         return <ActivityIndicator size="large" />;
     }
